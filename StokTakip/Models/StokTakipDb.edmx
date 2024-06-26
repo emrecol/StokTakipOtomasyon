@@ -1,0 +1,560 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="StokOtomasyonDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ItemTB">
+          <Key>
+            <PropertyRef Name="Item_Id" />
+          </Key>
+          <Property Name="Item_Id" Type="int" Nullable="false" />
+          <Property Name="Item_Name" Type="varchar" MaxLength="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PersonelTB">
+          <Key>
+            <PropertyRef Name="P_Id" />
+          </Key>
+          <Property Name="P_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="P_Ad" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="P_Soyad" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="P_Yetki" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="P_Mail" Type="varchar" MaxLength="30" />
+          <Property Name="P_Sifre" Type="char" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StokTB">
+          <Key>
+            <PropertyRef Name="S_Id" />
+          </Key>
+          <Property Name="S_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="U_Id" Type="int" Nullable="false" />
+          <Property Name="Wh_Id" Type="tinyint" Nullable="false" />
+          <Property Name="U_Adet" Type="int" Nullable="false" />
+          <Property Name="U_Raf" Type="varchar" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TransactionTB">
+          <Key>
+            <PropertyRef Name="T_Id" />
+          </Key>
+          <Property Name="T_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="U_Id" Type="int" Nullable="false" />
+          <Property Name="T_Type" Type="tinyint" Nullable="false" />
+          <Property Name="S_Depo" Type="tinyint" Nullable="false" />
+          <Property Name="T_Depo" Type="tinyint" Nullable="false" />
+          <Property Name="T_Adet" Type="int" Nullable="false" />
+          <Property Name="T_Date" Type="date" Nullable="false" />
+          <Property Name="T_Personel" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TransactionTypeAdTB">
+          <Key>
+            <PropertyRef Name="TT_Id" />
+          </Key>
+          <Property Name="TT_Id" Type="tinyint" Nullable="false" />
+          <Property Name="T_Type" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TransactionTypePerTB">
+          <Key>
+            <PropertyRef Name="TT_Id" />
+          </Key>
+          <Property Name="TT_Id" Type="tinyint" Nullable="false" />
+          <Property Name="T_Type" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WarehouseTB">
+          <Key>
+            <PropertyRef Name="W_Id" />
+          </Key>
+          <Property Name="W_Id" Type="tinyint" Nullable="false" />
+          <Property Name="W_Name" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="W_Yetki" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_StokTB_ItemTB">
+          <End Role="ItemTB" Type="Self.ItemTB" Multiplicity="1" />
+          <End Role="StokTB" Type="Self.StokTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemTB">
+              <PropertyRef Name="Item_Id" />
+            </Principal>
+            <Dependent Role="StokTB">
+              <PropertyRef Name="U_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StokTB_WarehouseTB">
+          <End Role="WarehouseTB" Type="Self.WarehouseTB" Multiplicity="1" />
+          <End Role="StokTB" Type="Self.StokTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WarehouseTB">
+              <PropertyRef Name="W_Id" />
+            </Principal>
+            <Dependent Role="StokTB">
+              <PropertyRef Name="Wh_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_ItemTB">
+          <End Role="ItemTB" Type="Self.ItemTB" Multiplicity="1" />
+          <End Role="TransactionTB" Type="Self.TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemTB">
+              <PropertyRef Name="Item_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="U_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_PersonelTB">
+          <End Role="PersonelTB" Type="Self.PersonelTB" Multiplicity="1" />
+          <End Role="TransactionTB" Type="Self.TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PersonelTB">
+              <PropertyRef Name="P_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="T_Personel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_TransactionTypePerTB">
+          <End Role="TransactionTypePerTB" Type="Self.TransactionTypePerTB" Multiplicity="1" />
+          <End Role="TransactionTB" Type="Self.TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionTypePerTB">
+              <PropertyRef Name="TT_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="T_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_TransactionTypeTB2">
+          <End Role="TransactionTypeAdTB" Type="Self.TransactionTypeAdTB" Multiplicity="1" />
+          <End Role="TransactionTB" Type="Self.TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionTypeAdTB">
+              <PropertyRef Name="TT_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="T_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_WarehouseTB">
+          <End Role="WarehouseTB" Type="Self.WarehouseTB" Multiplicity="1" />
+          <End Role="TransactionTB" Type="Self.TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WarehouseTB">
+              <PropertyRef Name="W_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="S_Depo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_WarehouseTB1">
+          <End Role="WarehouseTB" Type="Self.WarehouseTB" Multiplicity="1" />
+          <End Role="TransactionTB" Type="Self.TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WarehouseTB">
+              <PropertyRef Name="W_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="T_Depo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StokOtomasyonDbModelStoreContainer">
+          <EntitySet Name="ItemTB" EntityType="Self.ItemTB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PersonelTB" EntityType="Self.PersonelTB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StokTB" EntityType="Self.StokTB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionTB" EntityType="Self.TransactionTB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionTypeAdTB" EntityType="Self.TransactionTypeAdTB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionTypePerTB" EntityType="Self.TransactionTypePerTB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WarehouseTB" EntityType="Self.WarehouseTB" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_StokTB_ItemTB" Association="Self.FK_StokTB_ItemTB">
+            <End Role="ItemTB" EntitySet="ItemTB" />
+            <End Role="StokTB" EntitySet="StokTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StokTB_WarehouseTB" Association="Self.FK_StokTB_WarehouseTB">
+            <End Role="WarehouseTB" EntitySet="WarehouseTB" />
+            <End Role="StokTB" EntitySet="StokTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_ItemTB" Association="Self.FK_TransactionTB_ItemTB">
+            <End Role="ItemTB" EntitySet="ItemTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_PersonelTB" Association="Self.FK_TransactionTB_PersonelTB">
+            <End Role="PersonelTB" EntitySet="PersonelTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_TransactionTypePerTB" Association="Self.FK_TransactionTB_TransactionTypePerTB">
+            <End Role="TransactionTypePerTB" EntitySet="TransactionTypePerTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_TransactionTypeTB2" Association="Self.FK_TransactionTB_TransactionTypeTB2">
+            <End Role="TransactionTypeAdTB" EntitySet="TransactionTypeAdTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_WarehouseTB" Association="Self.FK_TransactionTB_WarehouseTB">
+            <End Role="WarehouseTB" EntitySet="WarehouseTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_WarehouseTB1" Association="Self.FK_TransactionTB_WarehouseTB1">
+            <End Role="WarehouseTB" EntitySet="WarehouseTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StokOtomasyonDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="StokOtomasyonDbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ItemTB" EntityType="StokOtomasyonDbModel.ItemTB" />
+          <EntitySet Name="PersonelTB" EntityType="StokOtomasyonDbModel.PersonelTB" />
+          <EntitySet Name="StokTB" EntityType="StokOtomasyonDbModel.StokTB" />
+          <EntitySet Name="sysdiagrams" EntityType="StokOtomasyonDbModel.sysdiagrams" />
+          <EntitySet Name="TransactionTB" EntityType="StokOtomasyonDbModel.TransactionTB" />
+          <EntitySet Name="TransactionTypeAdTB" EntityType="StokOtomasyonDbModel.TransactionTypeAdTB" />
+          <EntitySet Name="TransactionTypePerTB" EntityType="StokOtomasyonDbModel.TransactionTypePerTB" />
+          <EntitySet Name="WarehouseTB" EntityType="StokOtomasyonDbModel.WarehouseTB" />
+          <AssociationSet Name="FK_StokTB_ItemTB" Association="StokOtomasyonDbModel.FK_StokTB_ItemTB">
+            <End Role="ItemTB" EntitySet="ItemTB" />
+            <End Role="StokTB" EntitySet="StokTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_ItemTB" Association="StokOtomasyonDbModel.FK_TransactionTB_ItemTB">
+            <End Role="ItemTB" EntitySet="ItemTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_PersonelTB" Association="StokOtomasyonDbModel.FK_TransactionTB_PersonelTB">
+            <End Role="PersonelTB" EntitySet="PersonelTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StokTB_WarehouseTB" Association="StokOtomasyonDbModel.FK_StokTB_WarehouseTB">
+            <End Role="WarehouseTB" EntitySet="WarehouseTB" />
+            <End Role="StokTB" EntitySet="StokTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_TransactionTypePerTB" Association="StokOtomasyonDbModel.FK_TransactionTB_TransactionTypePerTB">
+            <End Role="TransactionTypePerTB" EntitySet="TransactionTypePerTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_TransactionTypeTB2" Association="StokOtomasyonDbModel.FK_TransactionTB_TransactionTypeTB2">
+            <End Role="TransactionTypeAdTB" EntitySet="TransactionTypeAdTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_WarehouseTB" Association="StokOtomasyonDbModel.FK_TransactionTB_WarehouseTB">
+            <End Role="WarehouseTB" EntitySet="WarehouseTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTB_WarehouseTB1" Association="StokOtomasyonDbModel.FK_TransactionTB_WarehouseTB1">
+            <End Role="WarehouseTB" EntitySet="WarehouseTB" />
+            <End Role="TransactionTB" EntitySet="TransactionTB" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ItemTB">
+          <Key>
+            <PropertyRef Name="Item_Id" />
+          </Key>
+          <Property Name="Item_Id" Type="Int32" Nullable="false" />
+          <Property Name="Item_Name" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="StokTB" Relationship="StokOtomasyonDbModel.FK_StokTB_ItemTB" FromRole="ItemTB" ToRole="StokTB" />
+          <NavigationProperty Name="TransactionTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_ItemTB" FromRole="ItemTB" ToRole="TransactionTB" />
+        </EntityType>
+        <EntityType Name="PersonelTB">
+          <Key>
+            <PropertyRef Name="P_Id" />
+          </Key>
+          <Property Name="P_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="P_Ad" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="P_Soyad" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="P_Yetki" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="P_Mail" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="P_Sifre" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="TransactionTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_PersonelTB" FromRole="PersonelTB" ToRole="TransactionTB" />
+        </EntityType>
+        <EntityType Name="StokTB">
+          <Key>
+            <PropertyRef Name="S_Id" />
+          </Key>
+          <Property Name="S_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="U_Id" Type="Int32" Nullable="false" />
+          <Property Name="Wh_Id" Type="Byte" Nullable="false" />
+          <Property Name="U_Adet" Type="Int32" Nullable="false" />
+          <Property Name="U_Raf" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ItemTB" Relationship="StokOtomasyonDbModel.FK_StokTB_ItemTB" FromRole="StokTB" ToRole="ItemTB" />
+          <NavigationProperty Name="WarehouseTB" Relationship="StokOtomasyonDbModel.FK_StokTB_WarehouseTB" FromRole="StokTB" ToRole="WarehouseTB" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TransactionTB">
+          <Key>
+            <PropertyRef Name="T_Id" />
+          </Key>
+          <Property Name="T_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="U_Id" Type="Int32" Nullable="false" />
+          <Property Name="T_Type" Type="Byte" Nullable="false" />
+          <Property Name="S_Depo" Type="Byte" Nullable="false" />
+          <Property Name="T_Depo" Type="Byte" Nullable="false" />
+          <Property Name="T_Adet" Type="Int32" Nullable="false" />
+          <Property Name="T_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="T_Personel" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ItemTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_ItemTB" FromRole="TransactionTB" ToRole="ItemTB" />
+          <NavigationProperty Name="PersonelTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_PersonelTB" FromRole="TransactionTB" ToRole="PersonelTB" />
+          <NavigationProperty Name="TransactionTypePerTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_TransactionTypePerTB" FromRole="TransactionTB" ToRole="TransactionTypePerTB" />
+          <NavigationProperty Name="TransactionTypeAdTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_TransactionTypeTB2" FromRole="TransactionTB" ToRole="TransactionTypeAdTB" />
+          <NavigationProperty Name="WarehouseTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_WarehouseTB" FromRole="TransactionTB" ToRole="WarehouseTB" />
+          <NavigationProperty Name="WarehouseTB1" Relationship="StokOtomasyonDbModel.FK_TransactionTB_WarehouseTB1" FromRole="TransactionTB" ToRole="WarehouseTB" />
+        </EntityType>
+        <EntityType Name="TransactionTypeAdTB">
+          <Key>
+            <PropertyRef Name="TT_Id" />
+          </Key>
+          <Property Name="TT_Id" Type="Byte" Nullable="false" />
+          <Property Name="T_Type" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TransactionTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_TransactionTypeTB2" FromRole="TransactionTypeAdTB" ToRole="TransactionTB" />
+        </EntityType>
+        <EntityType Name="TransactionTypePerTB">
+          <Key>
+            <PropertyRef Name="TT_Id" />
+          </Key>
+          <Property Name="TT_Id" Type="Byte" Nullable="false" />
+          <Property Name="T_Type" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TransactionTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_TransactionTypePerTB" FromRole="TransactionTypePerTB" ToRole="TransactionTB" />
+        </EntityType>
+        <EntityType Name="WarehouseTB">
+          <Key>
+            <PropertyRef Name="W_Id" />
+          </Key>
+          <Property Name="W_Id" Type="Byte" Nullable="false" />
+          <Property Name="W_Name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="W_Yetki" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="StokTB" Relationship="StokOtomasyonDbModel.FK_StokTB_WarehouseTB" FromRole="WarehouseTB" ToRole="StokTB" />
+          <NavigationProperty Name="TransactionTB" Relationship="StokOtomasyonDbModel.FK_TransactionTB_WarehouseTB" FromRole="WarehouseTB" ToRole="TransactionTB" />
+          <NavigationProperty Name="TransactionTB1" Relationship="StokOtomasyonDbModel.FK_TransactionTB_WarehouseTB1" FromRole="WarehouseTB" ToRole="TransactionTB" />
+        </EntityType>
+        <Association Name="FK_StokTB_ItemTB">
+          <End Type="StokOtomasyonDbModel.ItemTB" Role="ItemTB" Multiplicity="1" />
+          <End Type="StokOtomasyonDbModel.StokTB" Role="StokTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemTB">
+              <PropertyRef Name="Item_Id" />
+            </Principal>
+            <Dependent Role="StokTB">
+              <PropertyRef Name="U_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_ItemTB">
+          <End Type="StokOtomasyonDbModel.ItemTB" Role="ItemTB" Multiplicity="1" />
+          <End Type="StokOtomasyonDbModel.TransactionTB" Role="TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemTB">
+              <PropertyRef Name="Item_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="U_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_PersonelTB">
+          <End Type="StokOtomasyonDbModel.PersonelTB" Role="PersonelTB" Multiplicity="1" />
+          <End Type="StokOtomasyonDbModel.TransactionTB" Role="TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PersonelTB">
+              <PropertyRef Name="P_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="T_Personel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StokTB_WarehouseTB">
+          <End Type="StokOtomasyonDbModel.WarehouseTB" Role="WarehouseTB" Multiplicity="1" />
+          <End Type="StokOtomasyonDbModel.StokTB" Role="StokTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WarehouseTB">
+              <PropertyRef Name="W_Id" />
+            </Principal>
+            <Dependent Role="StokTB">
+              <PropertyRef Name="Wh_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_TransactionTypePerTB">
+          <End Type="StokOtomasyonDbModel.TransactionTypePerTB" Role="TransactionTypePerTB" Multiplicity="1" />
+          <End Type="StokOtomasyonDbModel.TransactionTB" Role="TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionTypePerTB">
+              <PropertyRef Name="TT_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="T_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_TransactionTypeTB2">
+          <End Type="StokOtomasyonDbModel.TransactionTypeAdTB" Role="TransactionTypeAdTB" Multiplicity="1" />
+          <End Type="StokOtomasyonDbModel.TransactionTB" Role="TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionTypeAdTB">
+              <PropertyRef Name="TT_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="T_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_WarehouseTB">
+          <End Type="StokOtomasyonDbModel.WarehouseTB" Role="WarehouseTB" Multiplicity="1" />
+          <End Type="StokOtomasyonDbModel.TransactionTB" Role="TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WarehouseTB">
+              <PropertyRef Name="W_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="S_Depo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTB_WarehouseTB1">
+          <End Type="StokOtomasyonDbModel.WarehouseTB" Role="WarehouseTB" Multiplicity="1" />
+          <End Type="StokOtomasyonDbModel.TransactionTB" Role="TransactionTB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WarehouseTB">
+              <PropertyRef Name="W_Id" />
+            </Principal>
+            <Dependent Role="TransactionTB">
+              <PropertyRef Name="T_Depo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StokOtomasyonDbModelStoreContainer" CdmEntityContainer="StokOtomasyonDbEntities">
+          <EntitySetMapping Name="ItemTB">
+            <EntityTypeMapping TypeName="StokOtomasyonDbModel.ItemTB">
+              <MappingFragment StoreEntitySet="ItemTB">
+                <ScalarProperty Name="Item_Name" ColumnName="Item_Name" />
+                <ScalarProperty Name="Item_Id" ColumnName="Item_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PersonelTB">
+            <EntityTypeMapping TypeName="StokOtomasyonDbModel.PersonelTB">
+              <MappingFragment StoreEntitySet="PersonelTB">
+                <ScalarProperty Name="P_Sifre" ColumnName="P_Sifre" />
+                <ScalarProperty Name="P_Mail" ColumnName="P_Mail" />
+                <ScalarProperty Name="P_Yetki" ColumnName="P_Yetki" />
+                <ScalarProperty Name="P_Soyad" ColumnName="P_Soyad" />
+                <ScalarProperty Name="P_Ad" ColumnName="P_Ad" />
+                <ScalarProperty Name="P_Id" ColumnName="P_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StokTB">
+            <EntityTypeMapping TypeName="StokOtomasyonDbModel.StokTB">
+              <MappingFragment StoreEntitySet="StokTB">
+                <ScalarProperty Name="U_Raf" ColumnName="U_Raf" />
+                <ScalarProperty Name="U_Adet" ColumnName="U_Adet" />
+                <ScalarProperty Name="Wh_Id" ColumnName="Wh_Id" />
+                <ScalarProperty Name="U_Id" ColumnName="U_Id" />
+                <ScalarProperty Name="S_Id" ColumnName="S_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="StokOtomasyonDbModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionTB">
+            <EntityTypeMapping TypeName="StokOtomasyonDbModel.TransactionTB">
+              <MappingFragment StoreEntitySet="TransactionTB">
+                <ScalarProperty Name="T_Personel" ColumnName="T_Personel" />
+                <ScalarProperty Name="T_Date" ColumnName="T_Date" />
+                <ScalarProperty Name="T_Adet" ColumnName="T_Adet" />
+                <ScalarProperty Name="T_Depo" ColumnName="T_Depo" />
+                <ScalarProperty Name="S_Depo" ColumnName="S_Depo" />
+                <ScalarProperty Name="T_Type" ColumnName="T_Type" />
+                <ScalarProperty Name="U_Id" ColumnName="U_Id" />
+                <ScalarProperty Name="T_Id" ColumnName="T_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionTypeAdTB">
+            <EntityTypeMapping TypeName="StokOtomasyonDbModel.TransactionTypeAdTB">
+              <MappingFragment StoreEntitySet="TransactionTypeAdTB">
+                <ScalarProperty Name="T_Type" ColumnName="T_Type" />
+                <ScalarProperty Name="TT_Id" ColumnName="TT_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionTypePerTB">
+            <EntityTypeMapping TypeName="StokOtomasyonDbModel.TransactionTypePerTB">
+              <MappingFragment StoreEntitySet="TransactionTypePerTB">
+                <ScalarProperty Name="T_Type" ColumnName="T_Type" />
+                <ScalarProperty Name="TT_Id" ColumnName="TT_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WarehouseTB">
+            <EntityTypeMapping TypeName="StokOtomasyonDbModel.WarehouseTB">
+              <MappingFragment StoreEntitySet="WarehouseTB">
+                <ScalarProperty Name="W_Yetki" ColumnName="W_Yetki" />
+                <ScalarProperty Name="W_Name" ColumnName="W_Name" />
+                <ScalarProperty Name="W_Id" ColumnName="W_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
